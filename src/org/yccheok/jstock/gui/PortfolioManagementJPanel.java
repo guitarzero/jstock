@@ -55,6 +55,8 @@ import org.jdesktop.swingx.JXTableHeader;
 import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.table.TableColumnExt;
 import org.jdesktop.swingx.treetable.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yccheok.jstock.engine.*;
 import org.yccheok.jstock.engine.currency.Currency;
 import org.yccheok.jstock.engine.currency.CurrencyPair;
@@ -314,6 +316,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        log.debug("jButton1ActionPerformed, In");
         List<Stock> stocks = getSelectedStocks();
         if (stocks.size() == 1) {
             this.showNewBuyTransactionJDialog(stocks.get(0), this.getStockPrice(stocks.get(0).code), true);
@@ -439,6 +442,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
 
     public boolean openAsExcelFile(File file) {
+        log.debug("openAsExcelFile, In");
         final java.util.List<Statements> statementsList = Statements.newInstanceFromExcelFile(file);
         boolean status = true;
         for (Statements statements : statementsList) {
@@ -448,11 +452,13 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
 
     public boolean openAsCSVFile(File file) {
+        log.debug("openAsCsvFile, In");
         final Statements statements = Statements.newInstanceFromCSVFile(file);
         return this.openAsStatements(statements, file);
     }
 
     public boolean openAsStatements(Statements statements, File file) {
+        log.debug("openAsStatements, In");
         assert(statements != null);
         
         if (statements.getType() == Statement.Type.PortfolioManagementBuy || statements.getType() == Statement.Type.PortfolioManagementSell || statements.getType() == Statement.Type.PortfolioManagementDeposit || statements.getType() == Statement.Type.PortfolioManagementDividend) {
@@ -952,6 +958,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
 
     private List<Stock> getSelectedStocks() {
+        log.debug("getSelectedStocks, In");
         List<Stock> stocks0 = this.getSelectedStocks(buyTreeTable);
         List<Stock> stocks1 = this.getSelectedStocks(sellTreeTable);
         Set<Code> c = new HashSet<Code>();
@@ -968,13 +975,14 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
             if (c.contains(stock.code) == false) {
                 c.add(stock.code);
                 stocks.add(stock);
-            }
+            } 
         }
 
         return Collections.unmodifiableList(stocks);
     }
     
     public double getStockPrice(Code code) {
+        log.debug("getStockPrice, In");
         Double price = portfolioRealTimeInfo.stockPrices.get(code);
         if (price == null) {
             return 0.0;
@@ -1155,6 +1163,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     private void buyTreeTableValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_buyTreeTableValueChanged
+        log.debug("buyTreeTableValueChanged, In");
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -1166,6 +1175,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buyTreeTableValueChanged
 
     private void sellTreeTableValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_sellTreeTableValueChanged
+        log.debug("sellTreeTableValueChanged, In");
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -1181,6 +1191,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_formMouseClicked
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        log.debug("jButton3ActionPerformed, In");
         final List<Stock> stocks = this.getSelectedStocks(buyTreeTable);
         if (stocks.size() != 1) {
             JOptionPane.showMessageDialog(this, java.util.ResourceBundle.getBundle("org/yccheok/jstock/data/messages").getString("info_message_you_need_to_select_only_single_stock_from_buy_portfolio_to_perform_sell_transaction"), java.util.ResourceBundle.getBundle("org/yccheok/jstock/data/messages").getString("info_title_you_need_to_select_only_single_stock_from_buy_portfolio_to_perform_sell_transaction"), JOptionPane.INFORMATION_MESSAGE);
@@ -1202,6 +1213,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     // When transaction summary being selected, we assume all its transactions are being selected.
     // This is most of the users intention too, I guess.
     private List<Transaction> getSelectedTransactions(JXTreeTable treeTable) {
+        log.debug("getSelectedTransactions, In");
         final TreePath[] treePaths = treeTable.getTreeSelectionModel().getSelectionPaths();
         List<Transaction> transactions = new ArrayList<Transaction>();
 
@@ -1408,13 +1420,15 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
 
     private void showSellPortfolioChartJDialog() {
+        log.debug("showSellPortfolioChartJDialog, In");
         final JStock m = JStock.instance();
         final SellPortfolioTreeTableModelEx sellPortfolioTreeTableModel = (SellPortfolioTreeTableModelEx)sellTreeTable.getTreeTableModel();
         SellPortfolioChartJDialog sellPortfolioChartJDialog = new SellPortfolioChartJDialog(m, false, sellPortfolioTreeTableModel, this.portfolioRealTimeInfo, this.getDividendSummary());
         sellPortfolioChartJDialog.setVisible(true);                                    
     }
     
-    private JPopupMenu getSellTreeTablePopupMenu() {                
+    private JPopupMenu getSellTreeTablePopupMenu() {     
+        log.debug("getSellTreeTablePopupMenu, In");
         final List<Transaction> transactions = getSelectedTransactions(this.sellTreeTable);
 
         JPopupMenu popup = new JPopupMenu();
@@ -1571,7 +1585,8 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
         dividendSummaryBarChartJDialog.setVisible(true);
     }
 
-    private JPopupMenu getBuyTreeTablePopupMenu() {                
+    private JPopupMenu getBuyTreeTablePopupMenu() {   
+        log.debug("getBuyTreeTablePopupMenu, In");
         JPopupMenu popup = new JPopupMenu();
 
         JMenuItem menuItem = new JMenuItem(GUIBundle.getString("PortfolioManagement_Buy..."), this.getImageIcon("/images/16x16/inbox.png"));
@@ -1812,14 +1827,19 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     private Set<Code> getBuyCodes() {
+        log.debug("getBuyCodes, In");
         return getCodes(buyTreeTable);
     }
     
     private Set<Code> getSellCodes() {
+        log.debug("getSellCodes, In");
         return getCodes(sellTreeTable);
     }
     
     private Set<Code> getCodes() {
+
+        log.debug("getCodes, In");
+
         Set<Code> codes = getBuyCodes();
         codes.addAll(getSellCodes());
         return codes;
@@ -1860,6 +1880,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
 
     private TransactionSummary addBuyTransaction(Transaction transaction) {
+        log.debug("addBuyTransaction, In");
         assert(transaction.getType() == Contract.Type.Buy);
         
         final BuyPortfolioTreeTableModelEx portfolioTreeTableModel = (BuyPortfolioTreeTableModelEx)buyTreeTable.getTreeTableModel();
@@ -1892,6 +1913,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
 
     public List<TransactionSummary> getTransactionSummariesFromPortfolios() {
+        log.debug("getTransactionSummariesFromPortfolios, In");
         final BuyPortfolioTreeTableModelEx buyPortfolioTreeTableModel = (BuyPortfolioTreeTableModelEx)buyTreeTable.getTreeTableModel();
         final SellPortfolioTreeTableModelEx sellPortfolioTreeTableModel = (SellPortfolioTreeTableModelEx)sellTreeTable.getTreeTableModel();
         final Portfolio buyPortfolio = (Portfolio) buyPortfolioTreeTableModel.getRoot();
@@ -1910,6 +1932,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
 
     public List<StockInfo> getStockInfosFromPortfolios() {
+        log.debug("GetStockInfosFromPortfolios, In");
         final BuyPortfolioTreeTableModelEx buyPortfolioTreeTableModel = (BuyPortfolioTreeTableModelEx)buyTreeTable.getTreeTableModel();
         final SellPortfolioTreeTableModelEx sellPortfolioTreeTableModel = (SellPortfolioTreeTableModelEx)sellTreeTable.getTreeTableModel();
         final Portfolio buyPortfolio = (Portfolio) buyPortfolioTreeTableModel.getRoot();
@@ -1956,6 +1979,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
 
     private TransactionSummary addSellTransaction(Transaction transaction) {
+        log.debug("addSellTransaction, In");
         assert(transaction.getType() == Contract.Type.Sell);
         
         final SellPortfolioTreeTableModelEx portfolioTreeTableModel = (SellPortfolioTreeTableModelEx)sellTreeTable.getTreeTableModel();
@@ -1998,6 +2022,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     private void updateRealTimeStockMonitorAccordingToPortfolioTreeTableModels() {
+        log.debug("updateRealTimeStockMonitorAccordingToPortfolioTreeTableModels, In");
         RealTimeStockMonitor _realTimeStockMonitor = this.realTimeStockMonitor;
         
         if (_realTimeStockMonitor == null) {
@@ -2017,9 +2042,9 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
             // So far, we treat this as an extremely rare case, and should not happen in real life.
             // However, if it does so, please remove the following optimization - contains(code)
             // check.
-            if (false == this.portfolioRealTimeInfo.currencies.containsKey(code)) {
+            //if (false == this.portfolioRealTimeInfo.currencies.containsKey(code)) {
                 _realTimeStockMonitor.addStockCode(code);
-            }
+            //}
         }
         
         _realTimeStockMonitor.startNewThreadsIfNecessary();
@@ -2027,6 +2052,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     private List<Stock> getSelectedStocks(JXTreeTable treeTable) {
+        log.debug("getSelectedStocks, In");
         final TreePath[] treePaths = treeTable.getTreeSelectionModel().getSelectionPaths();
         List<Stock> stocks = new ArrayList<Stock>();
         Set<Code> c = new HashSet<Code>();
@@ -2223,6 +2249,9 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
             final DividendSummary _dividendSummary,
             final DepositSummary _depositSummary          
             ) {
+        
+        log.debug("-->refreshGuiAfterInitPortfolio, In");
+        
         // Without "if" checking, tree expand won't work. Weird!
         if (PortfolioManagementJPanel.this.buyTreeTable.getTreeTableModel() != buyPortfolioTreeTableModel) {
             PortfolioManagementJPanel.this.buyTreeTable.setTreeTableModel(buyPortfolioTreeTableModel);
@@ -2564,6 +2593,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
 
     public void initRealTimeStockMonitor() {
+        log.debug("initRealTimeStockMonitor, In");
         final RealTimeStockMonitor oldRealTimeStockMonitor = realTimeStockMonitor;
         if (oldRealTimeStockMonitor != null) {            
             Utils.getZoombiePool().execute(new Runnable() {
@@ -2636,6 +2666,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     // This is the workaround to overcome Erasure by generics. We are unable to make MainFrame to
     // two observers at the same time.
     private org.yccheok.jstock.engine.Observer<RealTimeStockMonitor, java.util.List<Stock>> getRealTimeStockMonitorObserver() {
+        log.debug("getRealTimeStockMonitorObserver, In");
         return new org.yccheok.jstock.engine.Observer<RealTimeStockMonitor, java.util.List<Stock>>() {
             @Override
             public void update(RealTimeStockMonitor monitor, java.util.List<Stock> stocks)
@@ -2664,25 +2695,31 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     private void update(RealTimeStockMonitor monitor, final java.util.List<Stock> stocks) {
+        log.debug("Update, In");
         final BuyPortfolioTreeTableModelEx buyPortfolioTreeTableModel = (BuyPortfolioTreeTableModelEx)buyTreeTable.getTreeTableModel();
         final SellPortfolioTreeTableModelEx sellPortfolioTreeTableModel = (SellPortfolioTreeTableModelEx)sellTreeTable.getTreeTableModel();
         
         final Map<Code, Double> stockPrices = this.portfolioRealTimeInfo.stockPrices;
+        final Map<Code, Double> stockPercents = this.portfolioRealTimeInfo.stockPercents;
         final Map<Code, Currency> currencies = this.portfolioRealTimeInfo.currencies;
  
         final Set<Code> buyCodes = this.getBuyCodes();
         final Set<Code> sellCodes = this.getSellCodes();
         
-        for (Stock stock : stocks) {            
+        for (Stock stock : stocks) { 
+            log.debug("Processing stock {}", stock.getName());
+            
             final Code code = stock.code;
             final Currency currency = stock.getCurrency();
             
             boolean needBuyRefresh = false;
             boolean needSellRefresh = false;
             
+            final Double price = getNonZeroPriceIfPossible(stock);
+            final Double oldPrice = stockPrices.put(code, price);
+            stockPercents.put(code, stock.getChangePricePercentage());
+            
             if (buyCodes.contains(code)) {
-                final Double price = getNonZeroPriceIfPossible(stock);
-                final Double oldPrice = stockPrices.put(code, price);
                 if (false == price.equals(oldPrice)) {
                     this.portfolioRealTimeInfo.stockPricesDirty = true;
                     needBuyRefresh = true;
@@ -2702,6 +2739,12 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
                     }
                 }
             } else if (sellCodes.contains(code)) {
+
+                if (false == price.equals(oldPrice)) {
+                    this.portfolioRealTimeInfo.stockPricesDirty = true;
+                    needSellRefresh = true;
+                }
+
                 if (currency != null) {
                     final Currency oldCurrency = currencies.put(code, currency);
                     if (false == currency.equals(oldCurrency)) {
@@ -2716,7 +2759,8 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
                             Set<Code> buyCodes = PortfolioManagementJPanel.this.getBuyCodes();
                             if (false == buyCodes.contains(code)) {
                                 // We can remove this code safely.
-                                PortfolioManagementJPanel.this.realTimeStockMonitor.removeStockCode(code);
+                                // Commented - We want current prices for sold stocks also
+                                // PortfolioManagementJPanel.this.realTimeStockMonitor.removeStockCode(code);
                             }
                         }
                     });
@@ -2780,6 +2824,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     private void initGUIOptions() {
+        log.debug("initGuiOptions, In");
         File f = new File(org.yccheok.jstock.gui.Utils.getUserDataDirectory() + "config" + File.separator + "portfoliomanagementjpanel.xml");
         final GUIOptions guiOptions = Utils.fromXML(GUIOptions.class, f);
 
@@ -2933,7 +2978,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
             _cash += dividend;
             cash = _cash;
             
-            paperProfit = buyPortfolioTreeTableModel.getNetGainLossValue(localCurrency);
+            paperProfit = buyPortfolioTreeTableModel.getNetGainLossValue(localCurrency)+dividend;  // add SMO +dividend
             realizedProfit = sellPortfolioTreeTableModel.getNetGainLossValue(localCurrency);
         } else {
             final double exchangeRate = org.yccheok.jstock.portfolio.Utils.getExchangeRate(portfolioRealTimeInfo, localCurrency, country.stockCurrency);
@@ -2955,7 +3000,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
             _cash += dividend;
             cash = _cash;
             
-            paperProfit = buyPortfolioTreeTableModel.getGainLossValue(localCurrency);
+            paperProfit = buyPortfolioTreeTableModel.getGainLossValue(localCurrency)+dividend;  // add SMO +dividend
             realizedProfit = sellPortfolioTreeTableModel.getGainLossValue(localCurrency);
         }
 
@@ -2970,6 +3015,8 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
             realizedProfitPercentage = sellPortfolioTreeTableModel.getGainLossPercentage(localCurrency);
         }
         
+        final double todayChange = buyPortfolioTreeTableModel.getCurrentChange(localCurrency);
+        
         final DecimalPlace decimalPlace = jStockOptions.getDecimalPlace();
         
         final String _share = org.yccheok.jstock.portfolio.Utils.toCurrency(decimalPlace, share);
@@ -2978,13 +3025,14 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
         final String _paperProfitPercentage = org.yccheok.jstock.portfolio.Utils.toCurrency(DecimalPlace.Two, paperProfitPercentage);
         final String _realizedProfit = org.yccheok.jstock.portfolio.Utils.toCurrency(decimalPlace, realizedProfit);
         final String _realizedProfitPercentage = org.yccheok.jstock.portfolio.Utils.toCurrency(DecimalPlace.Two, realizedProfitPercentage);
+        final String _todayChange = org.yccheok.jstock.portfolio.Utils.toCurrency(decimalPlace, todayChange);
         
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 jLabel2.setText(_share);
                 jLabel4.setText(_cash);
-                jLabel6.setText(_paperProfit + " (" + _paperProfitPercentage + "%)");
+                jLabel6.setText(_paperProfit + " ("+ _todayChange +")" + " (" + _paperProfitPercentage + "%)");
                 jLabel8.setText(_realizedProfit + " (" + _realizedProfitPercentage + "%)");
                 jLabel2.setForeground(Utils.getColor(share, 0.0));
                 jLabel4.setForeground(Utils.getColor(cash, 0.0));
@@ -3012,6 +3060,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
      * Refresh all the labels with latest currency symbol.
      */
     public void refreshCurrencySymbol() {
+        log.debug("RefreshCurrencySymbol, In");
         jLabel1.setText(getShareLabel());
         jLabel3.setText(getCashLabel());
         jLabel5.setText(getPaperProfitLabel());
@@ -3035,6 +3084,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     private String getPaperProfitLabel() {
+        log.debug("GetPaperProfitLabel, In");
         final JStockOptions jStockOptions = JStock.instance().getJStockOptions();
         return MessageFormat.format(
             GUIBundle.getString("PortfolioManagementJPanel_PaperProfitLabel_template"),
@@ -3058,6 +3108,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     public void refreshRealTimeStockMonitor() {
+        log.debug("RefreshRealTimeStockMonitor, In");
         RealTimeStockMonitor _realTimeStockMonitor = this.realTimeStockMonitor;
         if (_realTimeStockMonitor != null) {
             _realTimeStockMonitor.refresh();
@@ -3065,6 +3116,7 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     public void rebuildRealTimeStockMonitor() {
+        log.debug("RebuildRealTimeStockMonitor, In");
         RealTimeStockMonitor _realTimeStockMonitor = this.realTimeStockMonitor;
         if (_realTimeStockMonitor != null) {
             _realTimeStockMonitor.rebuild();
@@ -3072,7 +3124,8 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
     }
     
     public PortfolioRealTimeInfo getPortfolioRealTimeInfo() {
-        return this.portfolioRealTimeInfo;
+          log.debug("getPortfolioRealTimeInfo, In");
+      return this.portfolioRealTimeInfo;
     }
     
     // We will display currency info if currency exchange feature is enabled,
@@ -3091,7 +3144,8 @@ public class PortfolioManagementJPanel extends javax.swing.JPanel {
         return (false == stockCurrency.equals(countryStockCurrency));
     }
     
-    private static final Log log = LogFactory.getLog(PortfolioManagementJPanel.class);
+    //private static final Log log = LogFactory.getLog(PortfolioManagementJPanel.class);
+    private static final Logger log = LoggerFactory.getLogger(PortfolioManagementJPanel.class);
 
     private int dividerLocation = -1;
 

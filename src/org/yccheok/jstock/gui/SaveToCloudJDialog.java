@@ -712,7 +712,7 @@ public class SaveToCloudJDialog extends javax.swing.JDialog {
         // public static String newline = System.getProperty("line.separator");
         // When NOT to use the system independent newline characters
         // JTextArea lines should be separated by a single '\n' character, not the sequence that is used for file line separators in the operating system.
-        // Console output (eg, System.out.println()), works fine with '\n', even on Windows.
+        // Console output (eg, log.debug()), works fine with '\n', even on Windows.
         final DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a");
         final String s = dateFormat.format(new Date()) + "\n" + message;
         this.memoryLog.add(s);

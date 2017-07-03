@@ -23,6 +23,8 @@ import java.util.Arrays;
 import org.jdesktop.swingx.treetable.*;
 import org.yccheok.jstock.portfolio.*;
 import javax.swing.tree.TreePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yccheok.jstock.engine.Code;
 import org.yccheok.jstock.engine.Country;
 import org.yccheok.jstock.engine.StockInfo;
@@ -37,7 +39,8 @@ import org.yccheok.jstock.internationalization.GUIBundle;
  * @author yccheok
  */
 public class BuyPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableModelEx {
-    
+
+    private static Logger log = LoggerFactory.getLogger(BuyPortfolioTreeTableModelEx.class);
     // Avoid NPE.
     private PortfolioRealTimeInfo portfolioRealTimeInfo = new PortfolioRealTimeInfo();
     private PortfolioManagementJPanel portfolioManagementJPanel = null;
@@ -73,7 +76,8 @@ public class BuyPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMode
             GUIBundle.getString("PortfolioManagementJPanel_Broker"),
             GUIBundle.getString("PortfolioManagementJPanel_ClearingFee"),
             GUIBundle.getString("PortfolioManagementJPanel_StampDuty"),
-            GUIBundle.getString("PortfolioManagementJPanel_Comment")
+            GUIBundle.getString("PortfolioManagementJPanel_Comment"),
+            GUIBundle.getString("MainFrame_ChgPercentage")
         };      
         columnNames = tmp;
     }
@@ -92,7 +96,8 @@ public class BuyPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMode
         Double.class,
         Double.class,
         Double.class,
-        String.class
+        String.class,
+        Double.class
     };
 
     /**
@@ -362,6 +367,64 @@ public class BuyPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMode
         return getCurrentValue(transaction) - transaction.getTotal();
     }
     
+    public double getChangePercentage(Transaction transaction) {
+        
+        final Code code = transaction.getStock().code;
+        
+        final Double chg = this.portfolioRealTimeInfo.stockPercents.get(code);
+
+        if (chg == null) return 0.0;
+        
+        return chg;
+
+    }
+
+    public double getChangePercentage(TransactionSummary transactionSummary) {
+
+        final Transaction transaction = (Transaction)transactionSummary.getChildAt(0);
+        
+        return this.getChangePercentage(transaction);
+
+    }
+ 
+    /** 
+     * Returns the change of a portfolio
+     * @param localCurrency
+     * @return 
+     */
+    public double getCurrentChange(Currency localCurrency) {
+        Portfolio portfolio = (Portfolio)getRoot();
+        
+        final int count = portfolio.getChildCount();
+        
+        double result = 0.0;
+        
+        for (int i = 0; i < count; i++) {
+            Object o = portfolio.getChildAt(i);
+            
+            assert(o instanceof TransactionSummary);
+            
+            final TransactionSummary transactionSummary = (TransactionSummary)o;
+                    
+            assert(transactionSummary.getChildCount() > 0);            
+                        
+            double qty = transactionSummary.getQuantity();
+            double currentChange = this.getChangePercentage(transactionSummary);
+            double currentPrice = this.getCurrentPrice(transactionSummary);
+            
+            final Transaction transaction = (Transaction)transactionSummary.getChildAt(0);
+        
+            final Code code = transaction.getStock().code;
+            
+            final double exchangeRate = org.yccheok.jstock.portfolio.Utils.getExchangeRate(portfolioRealTimeInfo, localCurrency, code);
+                                    
+            result += (qty*(currentPrice - 100*currentPrice/(100+currentChange)) * exchangeRate);
+        }
+        
+        return result;
+
+    }
+
     @Override
     public int getColumnCount() {
         assert(columnNames.length == cTypes.length);
@@ -385,6 +448,7 @@ public class BuyPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMode
         final DecimalPlace decimalPlace = JStock.instance().getJStockOptions().getDecimalPlace();
         
         if (node instanceof Portfolio) {
+            
             final Currency localCurrency = org.yccheok.jstock.portfolio.Utils.getLocalCurrency();
 
             final Portfolio portfolio = (Portfolio)node;
@@ -428,6 +492,7 @@ public class BuyPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMode
                     
                 case 12:
                     return portfolio.getComment();
+                
             }
         }
    
@@ -511,11 +576,16 @@ public class BuyPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMode
                     return new DoubleWrapper(decimalPlace, transactionSummary.getStampDuty());
                     
                 case 12:
-                    return transactionSummary.getComment();                    
+                    return transactionSummary.getComment();  
+
+                case 13:
+                    return new DoubleWrapper(decimalPlace, this.getChangePercentage(transactionSummary));
+
             }
         }
         
         if (node instanceof Transaction) {
+            
             final Transaction transaction = (Transaction)node;
             
             final Code code = transaction.getStock().code;
@@ -597,6 +667,10 @@ public class BuyPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMode
                     
                 case 12:
                     return transaction.getComment();
+                
+                case 13:
+                    return new DoubleWrapper(decimalPlace, this.getChangePercentage(transaction));
+
             }
         }
         

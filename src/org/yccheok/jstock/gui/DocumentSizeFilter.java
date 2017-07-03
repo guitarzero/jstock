@@ -35,8 +35,11 @@ package org.yccheok.jstock.gui;
 
 import javax.swing.text.*;
 import java.awt.Toolkit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DocumentSizeFilter extends DocumentFilter {
+    private static Logger log = LoggerFactory.getLogger(DocumentSizeFilter.class);
     int maxCharacters;
     boolean DEBUG = false;
 
@@ -49,7 +52,7 @@ public class DocumentSizeFilter extends DocumentFilter {
                              String str, AttributeSet a)
         throws BadLocationException {
         if (DEBUG) {
-            System.out.println("in DocumentSizeFilter's insertString method");
+            log.debug("in DocumentSizeFilter's insertString method");
         }
 
         //This rejects the entire insertion if it would make
@@ -68,7 +71,7 @@ public class DocumentSizeFilter extends DocumentFilter {
                         String str, AttributeSet a)
         throws BadLocationException {
         if (DEBUG) {
-            System.out.println("in DocumentSizeFilter's replace method");
+            log.debug("in DocumentSizeFilter's replace method");
         }
         //This rejects the entire replacement if it would make
         //the contents too long. Another option would be

@@ -105,11 +105,15 @@ public class JStock extends javax.swing.JFrame {
     /**
      * Initialize this MainFrame based on the JStockOptions.
      */
-    private void init() {        
+    private void init() {  
+        log.debug("--> Init, In");
+        
         initComponents();
+        log.debug("--> InitComponents, done");
 
         createLookAndFeelMenuItem();
         createCountryMenuItem();
+        log.debug("--> countryMenu, done");
 
         createStockIndicatorEditor();
         createIndicatorScannerJPanel();
@@ -147,6 +151,7 @@ public class JStock extends javax.swing.JFrame {
         this.initLanguageMenuItemsSelection();        
         this.initJXLayerOnJComboBox();
         this.initKeyBindings();
+        log.debug("--> keybinding, done");
         
         // Turn to the last viewed page.
         final int lastSelectedPageIndex = this.getJStockOptions().getLastSelectedPageIndex();
@@ -186,6 +191,8 @@ public class JStock extends javax.swing.JFrame {
                 JOptionPane.INFORMATION_MESSAGE
             );
         }
+        
+        log.debug("--> Init, Out");
     }
 
     private void requestFocusOnJComboBox() {
@@ -793,11 +800,13 @@ public class JStock extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private boolean openAsCSVFile(File file) {
+        log.debug("-->OpenAsCsvFile");
         final Statements statements = Statements.newInstanceFromCSVFile(file);
         return this.openAsStatements(statements, file);
     }
 
     public boolean openAsStatements(Statements statements, File file) {
+        log.debug("-->OpenAsStatements");
         assert(statements != null);
         
         final GUIBundleWrapper guiBundleWrapper = statements.getGUIBundleWrapper();
@@ -896,6 +905,7 @@ public class JStock extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void handleJTabbedPaneStateChanged(JTabbedPane pane) {
+        log.debug("-->handleJTabbedPaneStateChanged, In");
         // MainFrame
         if (pane.getSelectedComponent() == this.jPanel8) {
             this.jMenuItem2.setEnabled(true);   // Load
@@ -1595,6 +1605,7 @@ public class JStock extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonMenuItem5ActionPerformed
 
     private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
+        log.debug("--> Refresh");
         refreshAllRealTimeStockMonitors();
         refreshRealTimeIndexMonitor();
         refreshExchangeRateMonitor();
@@ -1646,6 +1657,7 @@ public class JStock extends javax.swing.JFrame {
      * @param watchlist Watchlist name
      */
     public void selectActiveWatchlist(String watchlist) {
+        log.debug("--> selectActiveWatchList, In");
         assert(SwingUtilities.isEventDispatchThread());
         // Save current watchlist.
         JStock.this.saveWatchlist();
@@ -1670,6 +1682,7 @@ public class JStock extends javax.swing.JFrame {
      * @param portfolio Portfolio name
      */
     public void selectActivePortfolio(String portfolio) {
+        log.debug("SelectActivePortfolio, In");
         assert(SwingUtilities.isEventDispatchThread());
         // Save current portfolio.
         JStock.this.portfolioManagementJPanel.savePortfolio();
@@ -1829,6 +1842,9 @@ public class JStock extends javax.swing.JFrame {
     }
     
     private void clearAllStocks() {
+        
+        log.debug("clearAllStocks, In");
+
         if (stockCodeHistoryGUI != null) {
             stockCodeHistoryGUI.clear();
         }
@@ -1866,6 +1882,8 @@ public class JStock extends javax.swing.JFrame {
     // Should we synchronized the jTable1, or post the job at GUI event dispatch
     // queue?    
     private void deteleSelectedTableRow() {
+                log.debug("deteleSelectedTableRow, In");
+
         assert(java.awt.EventQueue.isDispatchThread());
         
         StockTableModel tableModel = (StockTableModel)jTable1.getModel();
@@ -3432,6 +3450,7 @@ public class JStock extends javax.swing.JFrame {
        
         @Override
         public Boolean doInBackground() {
+            log.debug("DoInBackground, In");
             final Country country = jStockOptions.getCountry();
             
             Utils.createCompleteDirectoryHierarchyIfDoesNotExist(org.yccheok.jstock.gui.Utils.getUserDataDirectory() + country + File.separator + "database");

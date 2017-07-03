@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -600,5 +601,5 @@ public class Statement {
     private final Type type;
     private final List<Atom> atoms;
     private final Map<String, Object> typeToValue = new HashMap<String, Object>();
-    private static final Log log = LogFactory.getLog(Statement.class);
+    private static final Logger log = Logger.getLogger(Statement.class);
 }

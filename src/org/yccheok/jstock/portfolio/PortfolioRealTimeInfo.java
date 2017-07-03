@@ -44,6 +44,8 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -53,7 +55,11 @@ public class PortfolioRealTimeInfo {
     // Avoid using interface class, so that our gson serialization &
     // deserialization can work correctly.
 
+    // TODO mettre Stock au lieu de Double pour voir comment cela est remplit.
+    // mais on casse la sérialisation (qui est débile en soi car pourquoi sauver cela ?
+    
     public final ConcurrentHashMap<Code, Double> stockPrices = new ConcurrentHashMap<>();
+    public transient ConcurrentHashMap<Code, Double> stockPercents = new ConcurrentHashMap<>();
 
     public final ConcurrentHashMap<CurrencyPair, Double> exchangeRates = new ConcurrentHashMap<>();
 
@@ -66,7 +72,7 @@ public class PortfolioRealTimeInfo {
     public transient volatile boolean exchangeRatesDirty = false;
     public transient volatile boolean currenciesDirty = false;
 
-    private static final Log log = LogFactory.getLog(PortfolioRealTimeInfo.class);
+    private static final Logger log = LoggerFactory.getLogger(PortfolioRealTimeInfo.class);
 
     public PortfolioRealTimeInfo() {
     }
@@ -76,11 +82,16 @@ public class PortfolioRealTimeInfo {
     }
 
     private void copy(PortfolioRealTimeInfo portfolioRealTimeInfo) {
+        log.debug("Copy, In");
+        
         stockPrices.clear();
+        stockPercents.clear();
+        
         exchangeRates.clear();
         currencies.clear();
 
         stockPrices.putAll(portfolioRealTimeInfo.stockPrices);
+        stockPercents.putAll(portfolioRealTimeInfo.stockPercents);
         exchangeRates.putAll(portfolioRealTimeInfo.exchangeRates);
         currencies.putAll(portfolioRealTimeInfo.currencies);
 
@@ -122,6 +133,8 @@ public class PortfolioRealTimeInfo {
 
 
     public boolean load(File file) {
+        log.debug("load, In");
+        
         assert(file != null);
 
         if (false == file.isFile()) {
@@ -226,6 +239,7 @@ public class PortfolioRealTimeInfo {
     }
 
     public boolean save(File file) {
+        log.debug("save, In");
         GsonBuilder builder = new GsonBuilder();
         builder.enableComplexMapKeySerialization();
         Gson gson = builder.create();

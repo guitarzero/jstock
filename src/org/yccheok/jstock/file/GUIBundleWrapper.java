@@ -116,6 +116,7 @@ public class GUIBundleWrapper {
         _map.put("PortfolioManagementJPanel_PurchasePrice", "Purchase Price");
         _map.put("PortfolioManagementJPanel_CurrentPrice", "Current Price");
         _map.put("PortfolioManagementJPanel_PurchaseValue", "Purchase Value");
+        _map.put("PortfolioManagementJPanel_DeltaSinceSold", "Delta%sold");
         
         // PortfolioManagementJPanel_PurchaseFee is obsolete. It is replaced by
         // PortfolioManagementJPanel_PurchaseBroker, PortfolioManagementJPanel_PurchaseClearingFee

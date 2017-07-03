@@ -1820,7 +1820,7 @@ public class ChartJDialog extends javax.swing.JFrame implements WindowListener {
     }
 
     private void showMACDCustomDialog() {        
-        System.out.println("showMACDCustomDialog");
+        log.debug("showMACDCustomDialog");
     }
     
     // VERY BUGGY CODE STILL! :p

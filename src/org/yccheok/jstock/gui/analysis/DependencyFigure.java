@@ -18,6 +18,8 @@ import org.yccheok.jstock.gui.*;
 import java.awt.*;
 import static org.jhotdraw.draw.AttributeKeys.*;
 import org.jhotdraw.draw.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DependencyFigure.
@@ -26,6 +28,9 @@ import org.jhotdraw.draw.*;
  * @version 1.0 18. Juni 2006 Created.
  */
 public class DependencyFigure extends LineConnectionFigure {
+    
+        private static Logger log = LoggerFactory.getLogger(DependencyFigure.class);
+
     /** Creates a new instance. */
     public DependencyFigure() {
         STROKE_COLOR.set(this, new Color(0x000099));
@@ -62,17 +67,17 @@ public class DependencyFigure extends LineConnectionFigure {
         // indexedEnd.setNumOfConnection(indexedEnd.getNumOfConnection() - 1);
 
         if(start instanceof InputConnector) {
-            System.out.println("DependencyFigure handleDisconnect start InputConnector indexed " + ((InputConnector)start).getIndex());
+            log.debug("DependencyFigure handleDisconnect start InputConnector indexed " + ((InputConnector)start).getIndex());
         }
         else {
-            System.out.println("DependencyFigure handleDisconnect start OutputConnector indexed " + ((OutputConnector)start).getIndex());            
+            log.debug("DependencyFigure handleDisconnect start OutputConnector indexed " + ((OutputConnector)start).getIndex());            
         }
 
         if(end instanceof InputConnector) {
-            System.out.println("DependencyFigure handleDisconnect end InputConnector indexed " + ((InputConnector)end).getIndex());
+            log.debug("DependencyFigure handleDisconnect end InputConnector indexed " + ((InputConnector)end).getIndex());
         }
         else {
-            System.out.println("DependencyFigure handleDisconnect end OutputConnector indexed " + ((OutputConnector)end).getIndex());            
+            log.debug("DependencyFigure handleDisconnect end OutputConnector indexed " + ((OutputConnector)end).getIndex());            
         } 
         
         final OperatorFigure startOperatorFigure = (OperatorFigure)start.getOwner();
@@ -105,17 +110,17 @@ public class DependencyFigure extends LineConnectionFigure {
         // indexedEnd.setNumOfConnection(indexedEnd.getNumOfConnection() + 1);
         
         if(start instanceof InputConnector) {
-            System.out.println("DependencyFigure handleConnect start InputConnector indexed " + ((InputConnector)start).getIndex());
+            log.debug("DependencyFigure handleConnect start InputConnector indexed " + ((InputConnector)start).getIndex());
         }
         else {
-            System.out.println("DependencyFigure handleConnect start OutputConnector indexed " + ((OutputConnector)start).getIndex());            
+            log.debug("DependencyFigure handleConnect start OutputConnector indexed " + ((OutputConnector)start).getIndex());            
         }
 
         if(end instanceof InputConnector) {
-            System.out.println("DependencyFigure handleConnect end InputConnector indexed " + ((InputConnector)end).getIndex());
+            log.debug("DependencyFigure handleConnect end InputConnector indexed " + ((InputConnector)end).getIndex());
         }
         else {
-            System.out.println("DependencyFigure handleConnect end OutputConnector indexed " + ((OutputConnector)end).getIndex());            
+            log.debug("DependencyFigure handleConnect end OutputConnector indexed " + ((OutputConnector)end).getIndex());            
         }
         
         final OperatorFigure startOperatorFigure = (OperatorFigure)start.getOwner();
@@ -188,11 +193,11 @@ public class DependencyFigure extends LineConnectionFigure {
         //      Class c0 = C.class;
         //      Class d0 = D.class;
         //
-        //      System.out.println(c0.isAssignableFrom(a0));    // print false.
-        //      System.out.println(a0.isAssignableFrom(c0));    // print true.
+        //      log.debug(c0.isAssignableFrom(a0));    // print false.
+        //      log.debug(a0.isAssignableFrom(c0));    // print true.
         //
-        //      System.out.println(d0.isAssignableFrom(a0));    // print false.
-        //      System.out.println(a0.isAssignableFrom(d0));    // print false.
+        //      log.debug(d0.isAssignableFrom(a0));    // print false.
+        //      log.debug(a0.isAssignableFrom(d0));    // print false.
         return (outputClass.isAssignableFrom(inputClass) || inputClass.isAssignableFrom(outputClass));
     }
     

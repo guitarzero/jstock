@@ -8,12 +8,16 @@ package org.yccheok.jstock.engine;
 
 import java.util.List;
 import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author yccheok
  */
 public class CodeBucketListsTest extends TestCase {
+    
+    private static Logger log = LoggerFactory.getLogger(CodeBucketListsTest.class);
     
     public CodeBucketListsTest(String testName) {
         super(testName);
@@ -33,7 +37,7 @@ public class CodeBucketListsTest extends TestCase {
      * Test of get method, of class CodeBucketLists.
      */
     public void testGet() {
-        System.out.println("get");
+        log.debug("get");
         
         CodeBucketLists instance = new CodeBucketLists(3);
         instance.add(Code.newInstance("0.kl"));
@@ -84,7 +88,7 @@ public class CodeBucketListsTest extends TestCase {
      * Test of size method, of class CodeBucketLists.
      */
     public void testSize() {
-        System.out.println("size");
+        log.debug("size");
 
         CodeBucketLists instance = new CodeBucketLists(3);
         instance.add(Code.newInstance("0.kl"));
@@ -106,7 +110,7 @@ public class CodeBucketListsTest extends TestCase {
      * Test of add method, of class CodeBucketLists.
      */
     public void testAdd() {
-        System.out.println("add");
+        log.debug("add");
         CodeBucketLists instance = new CodeBucketLists(3);
         boolean status = instance.add(Code.newInstance("0.kl"));
         
@@ -121,7 +125,7 @@ public class CodeBucketListsTest extends TestCase {
      * Test of remove method, of class CodeBucketLists.
      */
     public void testRemove() {
-        System.out.println("remove");
+        log.debug("remove");
         
         CodeBucketLists instance = new CodeBucketLists(3);
         instance.add(Code.newInstance("0.kl"));

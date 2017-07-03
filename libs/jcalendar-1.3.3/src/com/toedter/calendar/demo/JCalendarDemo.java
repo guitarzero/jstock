@@ -215,7 +215,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 
 				button.addActionListener(actionListener);
 			} catch (Exception e) {
-				System.out.println("JCalendarDemo.createToolBar(): " + e);
+				log.debug("JCalendarDemo.createToolBar(): " + e);
 				button = new JButton(beans[i].getName());
 			}
 
@@ -251,7 +251,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 				icon = new ImageIcon(iconURL);
 				menuItem = new JMenuItem(beans[i].getName(), icon);
 			} catch (Exception e) {
-				System.out.println("JCalendarDemo.createMenuBar(): " + e + " for URL: " + "images/"
+				log.debug("JCalendarDemo.createMenuBar(): " + e + " for URL: " + "images/"
 						+ beans[i].getName() + "Color16.gif");
 				menuItem = new JMenuItem(beans[i].getName());
 			}

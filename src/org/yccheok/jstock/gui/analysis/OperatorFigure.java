@@ -297,13 +297,13 @@ public abstract class OperatorFigure extends GraphicalCompositeFigure implements
     public void addNotify(Drawing d)
     {
         super.addNotify(d);
-        System.out.println(this + " addNotify");
+        log.debug(this + " addNotify");
     }
     
     public void removeNotify(Drawing d)
     {
         super.removeNotify(d);
-        System.out.println(this + " removeNotify");
+        log.debug(this + " removeNotify");
     }
     
     public Operator getOperator()

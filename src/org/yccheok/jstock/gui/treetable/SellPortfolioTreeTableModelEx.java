@@ -77,7 +77,12 @@ public class SellPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMod
             GUIBundle.getString("PortfolioManagementJPanel_Broker"),
             GUIBundle.getString("PortfolioManagementJPanel_ClearingFee"),
             GUIBundle.getString("PortfolioManagementJPanel_StampDuty"),
-            GUIBundle.getString("PortfolioManagementJPanel_Comment")
+            GUIBundle.getString("PortfolioManagementJPanel_Comment"),
+            GUIBundle.getString("PortfolioManagementJPanel_CurrentPrice"),
+            GUIBundle.getString("MainFrame_ChgPercentage"),
+            /*GUIBundle.getString("PortfolioManagementJPanel_DeltaSinceSold")*/
+            "Delta Since Sold (%)"
+
         };
         columnNames = tmp;
     }
@@ -96,7 +101,10 @@ public class SellPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMod
         Double.class,
         Double.class,
         Double.class,
-        String.class
+        String.class,
+        Double.class,
+        Double.class,
+        Double.class
     };
     
     @Override
@@ -215,6 +223,65 @@ public class SellPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMod
         
         return (transaction.getNetTotal() - transaction.getNetReferenceTotal()) / transaction.getNetReferenceTotal() * 100.0;
     }
+
+    public double getCurrentPrice(Transaction transaction) {
+        final Code code = transaction.getStock().code;
+        
+        final Double price = this.portfolioRealTimeInfo.stockPrices.get(code);
+
+        if (price == null) return 0.0;
+        
+        return price;
+    }
+
+    public double getCurrentPrice(TransactionSummary transactionSummary) {
+        final Transaction transaction = (Transaction)transactionSummary.getChildAt(0);
+        
+        final Code code = transaction.getStock().code;
+
+        final Double price = this.portfolioRealTimeInfo.stockPrices.get(code);
+
+        if (price == null) return 0.0;
+        
+        return price;
+    }
+    
+    public double getChangePrice(Transaction transaction) {
+        final Code code = transaction.getStock().code;
+        
+        final Double price = this.portfolioRealTimeInfo.stockPercents.get(code);
+
+        if (price == null) return 0.0;
+        
+        return price;
+    }
+
+    public double getChangePrice(TransactionSummary transactionSummary) {
+
+        final Transaction transaction = (Transaction)transactionSummary.getChildAt(0);
+        return getChangePrice(transaction);
+    }
+    
+    public double getDeltaSinceSold(TransactionSummary transactionSummary) {
+        
+        double sold = this.getSellingPrice(transactionSummary);
+        
+        if (sold == 0.0) return 0.0;
+        
+        return (100.*this.getCurrentPrice(transactionSummary))/sold - 100.;
+        
+    }
+
+    public double getDeltaSinceSold(Transaction transaction) {
+        
+        double sold = transaction.getPrice();
+        
+        if (sold == 0.0) return 0.0;
+        
+        return (100.*this.getCurrentPrice(transaction))/sold - 100.;
+        
+    }
+    
     
     @Override
     public Object getValueAt(Object node, int column) {
@@ -364,6 +431,16 @@ public class SellPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMod
                     
                 case 12:
                     return transactionSummary.getComment();
+                
+                case 13:
+                    return new DoubleWrapper(decimalPlace, this.getCurrentPrice(transactionSummary));
+
+                case 14:
+                    return new DoubleWrapper(decimalPlace, this.getChangePrice(transactionSummary));
+                
+                case 15:
+                    return new DoubleWrapper(decimalPlace, this.getDeltaSinceSold(transactionSummary));
+                    
             }
         }
         
@@ -457,6 +534,16 @@ public class SellPortfolioTreeTableModelEx extends AbstractPortfolioTreeTableMod
                     
                 case 12:
                     return transaction.getComment();
+                
+                case 13:
+                    return new DoubleWrapper(decimalPlace, this.getCurrentPrice(transaction));
+                
+                case 14:
+                    return new DoubleWrapper(decimalPlace, this.getChangePrice(transaction));
+
+                case 15:
+                    return new DoubleWrapper(decimalPlace, this.getDeltaSinceSold(transaction));
+
             }
         }
         

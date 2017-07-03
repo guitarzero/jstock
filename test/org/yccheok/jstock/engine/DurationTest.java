@@ -6,12 +6,16 @@
 package org.yccheok.jstock.engine;
 
 import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author yccheok
  */
 public class DurationTest extends TestCase {
+    
+    private static Logger log = LoggerFactory.getLogger(DurationTest.class);
     
     public DurationTest(String testName) {
         super(testName);
@@ -31,7 +35,7 @@ public class DurationTest extends TestCase {
      * Test of getStartDate method, of class Duration.
      */
     public void testGetStartDate() {
-        System.out.println("getStartDate");
+        log.debug("getStartDate");
         Duration instance = new Duration(new SimpleDate(2008, 12, 25), new SimpleDate(2008, 12, 31));
         SimpleDate expResult = new SimpleDate(2008, 12, 25);
         SimpleDate result = instance.getStartDate();
@@ -42,7 +46,7 @@ public class DurationTest extends TestCase {
      * Test of getEndDate method, of class Duration.
      */
     public void testGetEndDate() {
-        System.out.println("getEndDate");
+        log.debug("getEndDate");
         Duration instance = new Duration(new SimpleDate(2008, 12, 25), new SimpleDate(2008, 12, 31));
         SimpleDate expResult = new SimpleDate(2008, 12, 31);
         SimpleDate result = instance.getEndDate();
@@ -53,7 +57,7 @@ public class DurationTest extends TestCase {
      * Test of getDurationInDays method, of class Duration.
      */
     public void testGetDurationInDays() {
-        System.out.println("getDurationInDays");
+        log.debug("getDurationInDays");
         Duration instance = new Duration(new SimpleDate(2008, 12, 25), new SimpleDate(2008, 12, 25));
         long expResult = 0L;
         long result = instance.getDurationInDays();
@@ -74,7 +78,7 @@ public class DurationTest extends TestCase {
      * Test of isContains method, of class Duration.
      */
     public void testIsContains() {
-        System.out.println("isContains");
+        log.debug("isContains");
         Duration duration = new Duration(new SimpleDate(2008, 12, 26), new SimpleDate(2008, 12, 30));
         Duration instance = new Duration(new SimpleDate(2008, 12, 25), new SimpleDate(2008, 12, 31));
         boolean expResult = true;
@@ -104,7 +108,7 @@ public class DurationTest extends TestCase {
      * Test of getTodayDurationByYears method, of class Duration.
      */
     public void testGetTodayDurationByYears() {
-        System.out.println("getTodayDurationByYears");
+        log.debug("getTodayDurationByYears");
         int durationInYears = 1;
 
         java.util.Calendar end = java.util.Calendar.getInstance();
@@ -120,7 +124,7 @@ public class DurationTest extends TestCase {
      * Test of getUnionDuration method, of class Duration.
      */
     public void testGetUnionDuration() {
-        System.out.println("getUnionDuration");
+        log.debug("getUnionDuration");
         Duration duration = new Duration(new SimpleDate(2008, 12, 24), new SimpleDate(2008, 12, 28));
         Duration instance = new Duration(new SimpleDate(2008, 12, 25), new SimpleDate(2008, 12, 31));
         Duration expResult = new Duration(new SimpleDate(2008, 12, 24), new SimpleDate(2008, 12, 31));
@@ -150,7 +154,7 @@ public class DurationTest extends TestCase {
      * Test of getTodayDurationByDays method, of class Duration.
      */
     public void testGetTodayDurationByDays() {
-        System.out.println("getTodayDurationByDays");
+        log.debug("getTodayDurationByDays");
         int durationInDays = 900;
 
         java.util.Calendar end = java.util.Calendar.getInstance();

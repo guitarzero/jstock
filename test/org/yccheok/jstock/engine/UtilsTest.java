@@ -7,6 +7,8 @@
 package org.yccheok.jstock.engine;
 
 import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yccheok.jstock.gui.JStockOptions;
 import org.yccheok.jstock.gui.JStock;
 
@@ -15,6 +17,8 @@ import org.yccheok.jstock.gui.JStock;
  * @author yccheok
  */
 public class UtilsTest extends TestCase {
+    
+    private static Logger log = LoggerFactory.getLogger(UtilsTest.class);
     
     public UtilsTest(String testName) {
         super(testName);
@@ -35,7 +39,7 @@ public class UtilsTest extends TestCase {
      * Test of toCompleteUnitedStatesGoogleFormat method, of class Utils.
      */
     public void testToCompleteUnitedStatesGoogleFormat() {
-        System.out.println("toCompleteUnitedStatesGoogleFormat");
+        log.debug("toCompleteUnitedStatesGoogleFormat");
         
         Code code = Code.newInstance("MCD");
         String result = Utils.toCompleteUnitedStatesGoogleFormat(code);
@@ -57,7 +61,7 @@ public class UtilsTest extends TestCase {
      * Test of toGoogleFormat method, of class Utils.
      */
     public void testToGoogleFormat() {
-        System.out.println("toGoogleFormat");
+        log.debug("toGoogleFormat");
 
         Code code = Code.newInstance("^DJI");
         String expResult = "INDEXDJX:.DJI";

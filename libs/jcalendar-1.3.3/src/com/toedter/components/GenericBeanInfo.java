@@ -55,7 +55,7 @@ public class GenericBeanInfo extends SimpleBeanInfo {
 			iconMono16 = loadImage("images/" + bean + "Mono16.gif");
 			iconMono32 = loadImage("images/" + bean + "Mono32.gif");
 		} catch (RuntimeException e) {
-			System.out.println("GenericBeanInfo.GenericBeanInfo(): " + e);
+			log.debug("GenericBeanInfo.GenericBeanInfo(): " + e);
 		}
 		
 		if(registerLocaleEditor) {
